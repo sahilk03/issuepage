@@ -3,62 +3,69 @@ import { useEffect, useState } from "react";
 import { TextField, Button } from "@material-ui/core";
 
 function App() {
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(2);
   const [currentIssue, setCurrentIssue] = useState({});
   const [searchText, setSearch] = useState("");
   const [api, setApi] = useState("https://api.github.com/repos/facebook/react");
   const [issueList, setIssueList] = useState([]);
   const [filteredList, setfilteredList] = useState([]);
+
   useEffect(() => {
-    fetch(api + "/issues?page=" + count)
+    fetch(api + "/issues?page=1")
       .then((res) => {
         if (res.status == "200") return res.json();
         else return Promise.reject(res.message);
       })
       .then((data) => {
         if (data) {
-          setIssueList([...issueList, ...data]);
+          setIssueList((issueList) => [...issueList, ...data]);
         }
       });
-  }, [count]);
-  useEffect(() => {
-    // let repo = prompt("Enter owner/repo :");
-    // if (repo) {
-    //   setApi("https://api.github.com/repos/" + repo);
-    // }
+    let repo = prompt("Enter owner/repo(Default=facebook/react) :   ");
+    if (repo) {
+      setApi("https://api.github.com/repos/" + repo);
+    }
   }, []);
+
   useEffect(() => {
-    window.removeEventListener("scroll", (e) => {
-      handleScroll(e);
-    });
     window.addEventListener("scroll", (e) => {
       handleScroll(e);
     });
-  }, [count]);
+    return () =>
+      window.removeEventListener("scroll", (e) => {
+        handleScroll(e);
+      });
+  }, []);
 
   let openIssueThread = (issueId) => {
-    fetch(api + "/issues/" + issueId)
-      .then((res) => res.json())
-      .then((currentIssue) => {
-        console.log("currentIssue", currentIssue);
-        setCurrentIssue(currentIssue);
-      });
-    console.log(count);
+    if (issueId) {
+      fetch(api + "/issues/" + issueId)
+        .then((res) => res.json())
+        .then((currentIssue) => {
+          setCurrentIssue(currentIssue);
+        });
+    }
   };
 
-  let loadMore = () => {
-    setCount((count) => {
-      return count + 1;
-    });
-  };
-
-  let handleScroll = (obj) => {
+  let handleScroll = (event) => {
     var lastLi = document.querySelector(".container").lastChild;
     if (lastLi) {
       var lastLiOffset = lastLi.offsetTop + lastLi.clientHeight;
       var pageOffset = window.pageYOffset + window.innerHeight;
       if (pageOffset >= lastLiOffset) {
-        loadMore();
+        setCount((count) => {
+          fetch(api + "/issues?page=" + count)
+            .then((res) => {
+              if (res.status == "200") return res.json();
+              else return Promise.reject(res.message);
+            })
+            .then((data) => {
+              if (data) {
+                setIssueList((issueList) => [...issueList, ...data]);
+              }
+            });
+          return count + 1;
+        });
       }
     }
   };
@@ -99,7 +106,7 @@ function App() {
         {issueList &&
           issueList.length > 0 &&
           (searchText
-            ? filteredList
+            ? filteredList.length > 0
               ? filteredList
               : [{ title: "No Items found" }]
             : issueList
@@ -142,7 +149,6 @@ function IssueThread(props) {
       })
       .then((data) => {
         if (data) {
-          console.log(data);
           setCommentList([...commentList, ...data]);
         }
       });
