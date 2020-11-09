@@ -1,38 +1,97 @@
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
+  width: 100%;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+}
+.container{
+  width: 80%;
+  height: 100%;
+  padding: 200px 0;
+  box-sizing: border-box;
+}
+.search{
+  width: 100%;
 }
 
-.App-link {
-  color: #61dafb;
+.title{
+  float: left;
+  border: 1px solid #eaecef;
+  width: 100%;
+  padding: 1.5%;
+  box-sizing: border-box;
+}
+.title:hover{
+  background: #eaecef;
+}
+.titlelink:hover{
+color: blue;
+cursor: pointer;
+}
+.labels{
+  margin: 0.3em;
+  background: #e7e7e7;
+  border-radius: 2px;
+  padding: 0.2em 0.5em;
+  border: 1px solid transparent;
+  border-radius: 2em;
+  font-size :12px;
+  font-weight: 500;
+  display: inline-block;
+}
+.thread_container{
+  margin: 2% 0;
+  display: flex;
+}
+.thread {
+  white-space: pre-wrap;
+  border: 1px solid #dadee4;
+  display: inline-block;
+  width: 90%;
+  position: relative;
+}
+.thread p{
+  width: 100%;
+  word-break: break-all;
+  font-size: 13px;
+}
+.commentUser{
+  border-bottom: 1px solid #c5c7ca;
+  background-color: #e1e4e8;
+}
+.usrtitle{
+  padding: 1% 0;
+  margin: 0;
+}
+.thread div{
+  padding: 0 2%;
+}
+.avatar{
+  display: inline-block;
+  height: 100%;
+  margin: 0 1%;
+  z-index: 10;
+}
+.avatarimg{
+  height: 50px;
+  width: 50px;
+  border: transparent;
+  border-radius: 50%;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.thread::before{
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -10px;
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent; 
+  border-right:15px solid #e1e4e8; 
+}
+
+.back{
+  position: fixed !important;
+  top:2%;
+  right: 2%;
 }
